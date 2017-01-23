@@ -1,0 +1,101 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>nebula-alert demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../core.js/client/shim.min.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-iconset-svg/iron-iconset-svg.html">
+    <link rel="import" href="../nebula-alert.html">
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+
+    <iron-iconset-svg size="24" name="alert">
+      <svg>
+        <defs>
+          <g id="error"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></g>
+          <g id="info"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></g>
+          <g id="warning"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g>
+        </defs>
+      </svg>
+    </iron-iconset-svg>
+
+    <div class="vertical-section-container">
+      <h3>Basic Text</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="demo1">
+          <nebula-alert
+            id="alert1"
+            text="You have gone offline"
+            buttons='["OK"]'>
+          </nebula-alert>
+          <button on-tap="show">Show Confirmation</button>
+        </template>
+        <script>
+          demo1.show = function(e) {
+            var el = document.getElementById('alert1')
+            el.show().then(function(value) {
+              console.log('The alert has been closed', value)
+            })
+          }
+        </script>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container">
+      <h3>Confirmation (Title)</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="demo2">
+          <nebula-alert
+            id="alert2"
+            color="yellow"
+            background-color="black"
+            title="Confirmation"
+            text="Are you sure you want to delete?"
+            buttons='["Yes", "No"]'>
+          </nebula-alert>
+          <button on-tap="show">Show Confirmation</button>
+        </template>
+        <script>
+          demo2.show = function(e) {
+            var el = document.getElementById('alert2')
+            el.show().then(function(value) {
+              console.log('The alert has been closed', value)
+            })
+          }
+        </script>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container">
+      <h3>Warning (Icon)</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="demo3">
+          <nebula-alert
+            id="alert3"
+            color="orange"
+            icon="alert:warning"
+            text="You have been warned!"
+            buttons='["OK", "Cancel"]'>
+          </nebula-alert>
+          <button on-tap="show">Show Alert</button>
+        </template>
+        <script>
+          demo3.show = function(e) {
+            var el = document.getElementById('alert3')
+            el.show().then(function(value) {
+              console.log('The alert has been closed', value)
+            })
+          }
+        </script>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>

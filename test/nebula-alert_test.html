@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>nebula-alert test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../nebula-alert.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <nebula-alert></nebula-alert>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('basic', function() {
+        var el
+        setup(function() {
+          el = fixture('basic')
+        })
+        test('element is created', function() {
+          assert.equal(el.is, 'nebula-alert')
+        })
+      })
+    </script>
+  </body>
+</html>
