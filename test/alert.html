@@ -2,9 +2,10 @@
 
 <html>
   <head>
-    <title>nebula-alert test</title>
+    <title>nebula-alert</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../core.js/client/shim.js"></script>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <link rel="import" href="../nebula-alert.html">
@@ -12,7 +13,7 @@
   <body>
     <test-fixture id="basic">
       <template>
-        <nebula-alert></nebula-alert>
+        <nebula-alert title="Alert" text="This is a test alert"></nebula-alert>
       </template>
     </test-fixture>
 
@@ -24,6 +25,16 @@
         })
         test('element is created', function() {
           assert.equal(el.is, 'nebula-alert')
+        })
+        test('show method opens and resolves when closed', function(done) {
+          el.show().then(function(result) {
+            assert.isUndefined(el.value)
+            assert.isUndefined(result)
+            done()
+          })
+          setTimeout(function() {
+            el.cancel()
+          }, 1000)
         })
       })
     </script>

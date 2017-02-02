@@ -1,6 +1,6 @@
 {
   "name": "nebula-alert",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A web component to display an alert dialog.",
   "license": "ISC",
   "author": "Chris Beckett <chrisb@arsnebula.com>",
@@ -18,7 +18,8 @@
     "dialog"
   ],
   "scripts": {
-    "test": "wct",
+    "test": "wct --plugin local",
+    "test:sauce": "wct --plugin sauce --sauce-username=arsnebula",
     "start": "browser-sync start -c bsconfig.js"
   },
   "standard": {

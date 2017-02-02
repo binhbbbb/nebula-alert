@@ -1,4 +1,7 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://beta.webcomponents.org/element/arsnebula/nebula-alert)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://beta.webcomponents.org/element/arsnebula/nebula-alert) [![Build Status](https://saucelabs.com/buildstatus/arsnebula)](https://saucelabs.com/beta/builds/bc3020256348470ea4ff347b8ba4bd40)
+
+[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/bc3020256348470ea4ff347b8ba4bd40)
+
 # \<nebula-alert\>
 
 A web component to display an alert dialog.
@@ -7,7 +10,9 @@ A web component to display an alert dialog.
 * Covers the entire screen with a backdrop and centered container
 * Supports optional title, icon, text and buttons
 * Supports `a11y` for accessability
-* Easily styled declaratively or with CSS custom properties and mixins
+* Easily styled with style attributes or with CSS variables and mixins
+
+> Warning: This element utilizes features of [ECMAScript 2015](http://www.ecma-international.org/ecma-262/6.0/) which may not be supported by all browsers. To ensure support by all browsers, consider using the [Core-js Polyfill](https://github.com/zloirock/core-js).
 
 ## Installation
 

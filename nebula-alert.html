@@ -5,25 +5,29 @@ This code may be used under the terms found in LICENSE.md of this repository.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
+<link rel="import" href="../nebula-style-attributes-behavior/nebula-style-attributes-behavior.html">
+<link rel="import" href="../nebula-button/nebula-button.html">
 
 <!--
-`<nebula-alert>` is a web component to display an alert dialog. The overlay uses a `fixed` position that fills the browser screen, and provides a backdrop, and a centered container.
+`<nebula-alert>` is a web component to display an alert dialog.
+  
+The overlay uses a `fixed` position that fills the browser screen, and provides a backdrop, and a centered container. The element uses conditional rendering of the following properties to support displaying alternate types of progress:
 
-The element provides optional properties for setting a title, an icon, text, and buttons. The `title` and `text` properties support **a11y** and are announced for screen readers.
+* title
+* icon
+* text
+* buttons
+
+The `title` and `text` properties support **a11y**. When either property is changed, the property value is announced for screen readers.
 
 The `value` property provides a read-only value used to determine how the dialog was closed. If the dialog was canceled by pressing the `ESC` key or clicking the backdrop, the `value` will be undefined, otherwise, the value will be the index of the button that was clicked.
 
 ## Usage
 
-The element is designed to support both declarative and programmatic use cases.
-
-### Declaratively
-
-The element can be used declaratively in your own element templates. 
+Add and configure the element using attributes: 
 
 ```html
 <nebula-alert
@@ -38,37 +42,36 @@ The element can be used declaratively in your own element templates.
 </nebula-alert>
 ```
 
-### Programmatically
-
-The element provides a `show` method to make it easy to create and display programatically. The method takes an `options` argument that can be used to set properties on the element, as well as automatically append and remove the element from `document.body`. The method returns a promise that is resolved when the element `closed` event is triggered.
+Add and configure the element programatically. The `show` method will ensure the element is appended and removed from the `document.body` automatically. The method returns a promise that is resolved once the element closing animation is complete.
 
 ```js
 // create the element
-var alert = document.createElement('nebula-alert')
-
-// show the element - automatically appended to document.body
-alert.show({
+var alert = Polymer.Base.create('nebula-alert', {
   title: 'Alert',
   icon: 'warning',
   text: 'You have been warned',
   buttons: ['OK']
-}).then(function(value) {
+})
+
+// show the element - automatically appended to document.body
+alert.show().then(function(value) {
   console.log('The alert has been closed', value)
 })
 ```
 
-## Styling
+## Style
 
 You can style the component using the following CSS custom properties and mixins:
 
-Custom property | Description
-----------------|-------------
-`--nebula-alert-backdrop-color` | The background color of the host element.
-`--nebula-alert-background-color` | The background color of the content container.
-`--nebula-alert-border-color` | The border color of the content container.
-`--nebula-alert-color` | The foreground color of child elements.
-`--nebula-alert-transition-duration` | The duration of the opening/closing animation.
-`--nebula-alert-z-index` | The stacking order of the element.
+Custom property | Description | Default
+:--- | :--- | :---
+`--nebula-alert-backdrop-color` | The background color of the host element. | hsla(0, 0%, 0%, 0.6)
+`--nebula-alert-background-color` | The background color of the content container. | hsla(0, 0%, 0%, 0.6)
+`--nebula-alert-border-color` | The border color of the content container. | transparent
+`--nebula-alert-button-color` | The border color of the content container. | grey
+`--nebula-alert-color` | The foreground color of child elements. | | white
+`--nebula-alert-transition-duration` | The duration of the opening/closing animation. | 0.4s
+`--nebula-alert-z-index` | The stacking order of the element. | 9999
 `--nebula-alert` | Mixin applied to the host element.
 `--nebula-alert-container` | Mixin applied to the content container element.
 `--nebula-alert-title` | Mixin applied to the title element.
@@ -76,13 +79,13 @@ Custom property | Description
 `--nebula-alert-icon` | Mixin applied to the icon element.
 `--nebula-alert-button` | Mixin applied to the button elements.
 
-For convenience, you can specify style values using the following (optional) properties:
+The following styles can also be set as attributes on the element:
 
-- **backdropColor**
-- **backgroundColor**
-- **borderColor**
-- **color**
-- **transitionDuration**
+- `backdrop-color`
+- `border-color`
+- `background-color`
+- `button-color`
+- `color`
 
 @demo demo/index.html
 -->
@@ -94,6 +97,7 @@ For convenience, you can specify style values using the following (optional) pro
         --nebula-alert-backdrop-color: hsla(0, 0%, 0%, 0.6);
         --nebula-alert-background-color: hsl(0, 0%, 15%);
         --nebula-alert-border-color: transparent;
+        --nebula-alert-button-color: grey;
         --nebula-alert-color: white;
         --nebula-alert-z-index: 9999;
         --nebula-alert-transition-duration: 0.4s;
@@ -139,7 +143,7 @@ For convenience, you can specify style values using the following (optional) pro
       }
       #container > #title,
       #container > #icon,
-      #container > text {
+      #container > #text {
         margin: 4px 0;
         text-align: center;
       }
@@ -158,31 +162,14 @@ For convenience, you can specify style values using the following (optional) pro
       #buttons {
         width: 100%;
         margin: 16px 0 0 0;
+        text-align: center;
         @apply --layout-vertical;
         @apply --layout-center-justified;
-        @apply --nebula-alert-buttons;
       }
-      #buttons > button {
-        color: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        margin-top: 8px;        
-        padding: 8px;
-        outline: none;
-        cursor: pointer;
-        border: 1px solid var(--nebula-alert-color);
-        background-color: transparent;
-        opacity: 0.7;
+      nebula-button {
+        margin: 4px 0;
+        --nebula-button-color: var(--nebula-alert-button-color);
         @apply --nebula-alert-button;
-      }
-      #buttons > button:focus,
-      #buttons > button:hover {
-        opacity: 1;
-        background-color: hsla(0, 0%, 100%, 0.2);
-      }
-      #buttons > button:active {
-        opacity: 0.7;
-        background-color: hsla(0, 0%, 100%, 0.2);
       }
     </style>
     <div id="container" on-tap="_onContainerTap" tabindex="-1">
@@ -200,12 +187,11 @@ For convenience, you can specify style values using the following (optional) pro
       <template is="dom-if" if="[[buttons]]">
         <div id="buttons">
           <template is="dom-repeat" items="[[buttons]]">
-            <button
-              type="button"
+            <nebula-button
               data-index$="[[index]]"
               on-tap="_onButtonTap">
-              {{item}}
-            </button>
+              {{item}}    
+            </nebula-button>
           </template>
         </div>
       </template>
@@ -223,15 +209,15 @@ For convenience, you can specify style values using the following (optional) pro
        */ 
       is: 'nebula-alert',
       behaviors: [
-        Polymer.IronA11yKeysBehavior
+        Nebula.StyleAttributesBehavior
       ],      
       hostAttributes: {
-        'role': 'progressbar'
+        'role': 'alertdialog'
       },
       properties: {
         /**
-         * True if the element is opened, otherwise false.
-         */
+        * True if the element is opened, otherwise false.
+        */
         opened: {
           type: Boolean,
           reflectToAttribute: true,
@@ -239,124 +225,108 @@ For convenience, you can specify style values using the following (optional) pro
           value: false
         },
         /**
-         * The title to display.
-         */
+        * The title to display.
+        */
         title: {
           type: String
         },
         /**
-         * The icon key to display as a spinner.
-         */
+        * The icon key to display as a spinner.
+        */
         icon: {
           type: String
         },
         /**
-         * The text message to display.
-         */
+        * The text message to display.
+        */
         text: {
           type: String
         },
         /**
-         * An array of buttons to generate.
-         */
+        * An array of buttons to generate.
+        */
         buttons: {
           type: Array
         },
         /**
-         * The color of the element.
-         * Setting this property will override the <b>--nebula-toast--color</b> custom CSS property.
-         */
-        color: {
-          type: String
-        },
-        /**
-         * The background color of the element.
-         * Setting this property will override the <b>--nebula-toast-background-color</b> custom CSS property.
-         */
-        backgroundColor: {
-          type: String
-        },
-        /**
-         * The backdrop color of the element.
-         * Setting this property will override the <b>--nebula-toast-background-color</b> custom CSS property.
-         */
-        backdropColor: {
-          type: String
-        },
-        /**
-         * The transition duration of the element.
-         * Setting this property will override the <b>--nebula-toast-transition-duration</b> custom CSS property.
-         */
-        transitionDuration: {
-          type: String
-        },
-        /**
-         * The target element for key event listeners.
-         */
-        keyEventTarget: {
-          type: Object,
-          value: function() {
-            return document.body
-          }
-        },
-        /**
-         * The index value of the button tapped to close the element.
-         */
+        * The index value of the button tapped to close the element.
+        */
         value: {
           type: String,
           readOnly: true,
           notify: true
+        },
+        /**
+        * Map of style attributes that can be used to update CSS variables.
+        */
+        styleAttributes: {
+          type: Object,
+          readOnly: true,
+          value: function() {
+            return {
+              'color': '--nebula-alert-color',
+              'background-color': '--nebula-alert-background-color',
+              'border-color': '--nebula-alert-border-color',
+              'backdrop-color': '--nebula-alert-backdrop-color',
+              'button-color': '--nebula-alert-button-color'
+            }
+          }
         }
       },
-      keyBindings: {
-        'esc': 'cancel'
-      },
       observers: [
+        '_onOpenedChanged(opened)',
         '_onTitleChanged(title)',
-        '_onTextChanged(text)',
-        '_onStyleChanged(color, "--nebula-alert-color")',
-        '_onStyleChanged(backgroundColor, "--nebula-alert-background-color")',
-        '_onStyleChanged(backdropColor, "--nebula-alert-backdrop-color")',
-        '_onStyleChanged(transitionDuration, "--nebula-alert-transition-duration")'
+        '_onTextChanged(text)'
       ],
       listeners: {
         'transitionend': '_onTransitionEnd',
-        'tap': 'cancel'
+        'tap': '_onTap'
       },
       /**
-       * Lifecycle event handler triggered when the element has been initialized.
-       */
-      ready() {
+      * Lifecycle event handler triggered when the element has been initialized.
+      */
+      ready: function() {
         Polymer.IronA11yAnnouncer.requestAvailability();
       },
       /**
-       * Event handler when content container is tapped.
-       * It discards the event.
-       */
-      _onContainerTap(e) {
-        e.stopPropagation()
+      * Lifecycle handler triggered when a key is pressed down.
+      * The handler is added and removed automatically when a element is opened and closed.
+      */ 
+      _onKey: function(e) {
+        var key = e.keyCode || e.which
+        if (key === 27) {
+          this.cancel()
+          return false
+        }
       },
       /**
-       * Event handler when a content button is tapped.
-       * It sets the value property, and closes the element.
-       */
-      _onButtonTap(e) {
-        e.stopPropagation()
+      * Event handler triggered when the user taps the element.
+      * The element is automatically closed.
+      */
+      _onTap: function(e) {
+        this.cancel()
+        return false
+      },
+      /**
+      * Event handler when content container is tapped.
+      * It discards the event.
+      */
+      _onContainerTap: function(e) {
+        return false
+      },
+      /**
+      * Event handler when a content button is tapped.
+      * It sets the value property, and closes the element.
+      */
+      _onButtonTap: function(e) {
         this._setValue(e.target.dataset.index)
         this.set('opened', false)
+        return false
       },
       /**
-       * Property observer triggered when the value of any style-related property is changed.
-       */
-      _onStyleChanged(propName, varName) {
-        this.updateStyles({
-          [varName]: propName
-        })
-      },
-      /**
-       * Event handler triggered when opening and closing animation is complete.
-       */
-      _onTransitionEnd(e) {
+      * Event handler triggered when opening and closing animation is complete.
+      */
+      _onTransitionEnd: function(e) {
         if (e.propertyName === 'opacity') {
           if (this.opened) {
             if (this.title) {
@@ -374,41 +344,58 @@ For convenience, you can specify style values using the following (optional) pro
         }
       },
       /**
-       * Progress observer triggered when the title is changed.
-       * The change is announced for screen readers to support **a11y**.
-       */
-      _onTitleChanged(title) {
-        if (title && this.opened) {
-          this.fire('iron-announce', {text: this.title}, {bubbles: true});
+      * Property observer triggered when the value of `opened` is changed.
+      */
+      _onOpenedChanged: function(opened) {
+        if (opened) {
+          document.addEventListener('keydown', this._onKey.bind(this))
+        } else {
+          document.removeEventListener('keydown', this._onKey)
         }
       },
       /**
-       * Progress observer triggered when the text is changed.
-       * The change is announced for screen readers to support **a11y**.
-       */
-      _onTextChanged(text) {
-        if (text && this.opened) {
-          this.fire('iron-announce', {text: this.text}, {bubbles: true});
+      * Progress observer triggered when the title is changed.
+      * The change is announced for screen readers to support **a11y**.
+      */
+      _onTitleChanged: function(title) {
+        if (title) {
+          this.setAttribute('aria-labelledby', 'title')
+          if (this.opened) {
+            this.fire('iron-announce', {text: this.title}, {bubbles: true})  
+          }
+        } else {
+          this.removeAttribute('aria-labelledby')
         }
       },
       /**
-       * Hides the element.
-       */
-      cancel() {
+      * Progress observer triggered when the text is changed.
+      * The change is announced for screen readers to support **a11y**.
+      */
+      _onTextChanged: function(text) {
+        if (text) {
+          this.setAttribute('aria-describedby', 'text')
+          if (this.opened) {
+            this.fire('iron-announce', {text: this.text}, {bubbles: true})
+          }
+        } else {
+          this.removeAttribute('aria-describedby')
+        }
+      },
+      /**
+      * Hides the element.
+      */
+      cancel: function() {
         if (this.opened) {
           this._setValue(undefined)
           this.set('opened', false)
         }
       },
       /**
-       * Displays the element.
-       * Any provided options will be merged into the element properties.
-       * A promise is returned that will resolve when the element has been closed.
-       */
-      show(options) {
+      * Displays the element.
+      * A promise is returned that will resolve when the element has been closed.
+      */
+      show: function() {
         return new Promise(function(resolve) {
-          if (options) Object.assign(this, options)
-
           // add element to document body if not parent
           if (!this.parentNode) {
             this._appended = true
