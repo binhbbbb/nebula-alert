@@ -9,37 +9,28 @@
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../iron-iconset-svg/iron-iconset-svg.html">
+    <link rel="import" href="../../iron-icons/iron-icons.html">
     <link rel="import" href="../nebula-alert.html">
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </head>
   <body>
 
-    <iron-iconset-svg size="24" name="alert">
-      <svg>
-        <defs>
-          <g id="error"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></g>
-          <g id="info"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></g>
-          <g id="warning"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g>
-        </defs>
-      </svg>
-    </iron-iconset-svg>
-
     <div class="vertical-section-container">
-      <h3>Basic Text</h3>
+      <h3>Basic Alert</h3>
       <demo-snippet>
         <template is="dom-bind" id="demo1">
           <nebula-alert
-            id="alert1"
-            text="You have gone offline"
+            id="basic-alert"
+            title="Network Status"
+            text="You have gone offline."
             buttons='["OK"]'>
           </nebula-alert>
-          <button on-tap="show">Show Confirmation</button>
+          <button on-tap="show">Show Alert</button>
         </template>
         <script>
           demo1.show = function(e) {
-            var el = document.getElementById('alert1')
+            var el = document.getElementById('basic-alert')
             el.show().then(function(value) {
               console.log('The alert has been closed', value)
             })
@@ -49,14 +40,13 @@
     </div>
 
     <div class="vertical-section-container">
-      <h3>Confirmation (Title)</h3>
+      <h3>Confirmation Alert</h3>
       <demo-snippet>
         <template is="dom-bind" id="demo2">
           <nebula-alert
             id="alert2"
-            color="yellow"
-            background-color="black"
-            title="Confirmation"
+            title-color="yellow"
+            title="Warning"
             text="Are you sure you want to delete?"
             buttons='["Yes", "No"]'>
           </nebula-alert>
@@ -79,8 +69,10 @@
         <template is="dom-bind" id="demo3">
           <nebula-alert
             id="alert3"
-            color="orange"
-            icon="alert:warning"
+            icon-color="orange"
+            icon="icons:warning"
+            title-color="orange"
+            title="Warning"
             text="You have been warned!"
             buttons='["OK", "Cancel"]'>
           </nebula-alert>

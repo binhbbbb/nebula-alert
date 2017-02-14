@@ -1,6 +1,6 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://beta.webcomponents.org/element/arsnebula/nebula-alert) [![Build Status](https://saucelabs.com/buildstatus/arsnebula)](https://saucelabs.com/beta/builds/bc3020256348470ea4ff347b8ba4bd40)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/arsnebula/nebula-alert)
 
-[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/bc3020256348470ea4ff347b8ba4bd40)
+[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/bec618eb8d2f4e9c82e66ceb51e8c36e)
 
 # \<nebula-alert\>
 
@@ -32,13 +32,12 @@ Add and configure the element declaratively:
 
 ```html
 <nebula-alert
-  id="alert"
   title="Alert"
-  icon="warning"
+  icon="icons:warning"
   text="You have been warned."
   buttons='["OK"]'
-  background-color="black"
-  color="white">
+  on-closed="_onClosed"
+  result="{{alertResult">
 </nebula-alert>
 ```
 
@@ -46,18 +45,16 @@ You can also easily create and display the element programatically using the `sh
 
 ```js
 // create the element
-var alert= document.createElement('nebula-alert')
-
-// show the element - automatically appended to document.body
-alert.show({
+var alert = Polymer.Base.create('nebula-alert', {
   title: 'Alert',
   icon: 'warning',
-  text: 'You have been warned.',
-  buttons: ['OK'],
-  backgroundColor: 'black',
-  color: 'white'
-}).then(function() {
-  console.log('Alert has been closed')
+  text: 'You have been warned',
+  buttons: ['OK']
+})
+
+// show the element - automatically appended to document.body
+alert.show().then(function(result) {
+  console.log('The alert has been closed', result)
 })
 ```
 

@@ -5,44 +5,30 @@ This code may be used under the terms found in LICENSE.md of this repository.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
 <link rel="import" href="../nebula-style-attributes-behavior/nebula-style-attributes-behavior.html">
+<link rel="import" href="../nebula-dialog/nebula-dialog.html">
+<link rel="import" href="../nebula-appbar-layout/nebula-appbar-layout.html">
 <link rel="import" href="../nebula-button/nebula-button.html">
 
 <!--
 `<nebula-alert>` is a web component to display an alert dialog.
   
-The overlay uses a `fixed` position that fills the browser screen, and provides a backdrop, and a centered container. The element uses conditional rendering of the following properties to support displaying alternate types of progress:
-
-* title
-* icon
-* text
-* buttons
-
-The `title` and `text` properties support **a11y**. When either property is changed, the property value is announced for screen readers.
-
-The `value` property provides a read-only value used to determine how the dialog was closed. If the dialog was canceled by pressing the `ESC` key or clicking the backdrop, the `value` will be undefined, otherwise, the value will be the index of the button that was clicked.
-
 ## Usage
 
-Add and configure the element using attributes: 
+The following demonstrates the element with some common properties and events.
 
 ```html
 <nebula-alert
-  id="loader"
+  icon="icons:warning"
   title="Alert"
-  icon="warning"
   text="You have been warned"
   buttons='["OK"]'
-  background-color="black"
-  color="white"
   value="{{alertValue}}>
 </nebula-alert>
 ```
 
-Add and configure the element programatically. The `show` method will ensure the element is appended and removed from the `document.body` automatically. The method returns a promise that is resolved once the element closing animation is complete.
+You can also create and show the element programatically. The `show` method will ensure the element is appended and removed from the `document.body` automatically. The method returns a promise that is resolved once the element closing animation is complete.
 
 ```js
 // create the element
@@ -54,176 +40,152 @@ var alert = Polymer.Base.create('nebula-alert', {
 })
 
 // show the element - automatically appended to document.body
-alert.show().then(function(value) {
-  console.log('The alert has been closed', value)
+alert.show().then(function(result) {
+  console.log('The alert has been closed', result)
 })
 ```
 
+The `result` property wil return the index of the button clicked to close the dialog, or `undefined` if the dialog was cancelled by pressing the `ESC` key or clicking the backdrop. To disable cancel, set the `allowCancel` property to `false`.
+
 ## Style
 
-You can style the component using the following CSS custom properties and mixins:
+The preferred approach to styling the element is using CSS custom properties and mixins.
 
 Custom property | Description | Default
 :--- | :--- | :---
-`--nebula-alert-backdrop-color` | The background color of the host element. | hsla(0, 0%, 0%, 0.6)
-`--nebula-alert-background-color` | The background color of the content container. | hsla(0, 0%, 0%, 0.6)
-`--nebula-alert-border-color` | The border color of the content container. | transparent
-`--nebula-alert-button-color` | The border color of the content container. | grey
-`--nebula-alert-color` | The foreground color of child elements. | | white
-`--nebula-alert-transition-duration` | The duration of the opening/closing animation. | 0.4s
-`--nebula-alert-z-index` | The stacking order of the element. | 9999
+`--nebula-alert-background-color` | The color of the dialog background. | black
+`--nebula-alert-border-color` | The color of the dialog border. | transparent
+`--nebula-alert-button-color` | The color of the buttons. | grey
+`--nebula-alert-icon-color` | The color of the icon. | | white
+`--nebula-alert-title-color` | The color of the title. | | white
+`--nebula-alert-text-color` | The color of the text. | | white
 `--nebula-alert` | Mixin applied to the host element.
-`--nebula-alert-container` | Mixin applied to the content container element.
+`--nebula-alert-dialog` | Mixin applied to the dialog container.
 `--nebula-alert-title` | Mixin applied to the title element.
 `--nebula-alert-text` | Mixin applied to the text element.
 `--nebula-alert-icon` | Mixin applied to the icon element.
 `--nebula-alert-button` | Mixin applied to the button elements.
 
-The following styles can also be set as attributes on the element:
+For convenience, you can also apply a theme to the element using the following style attributes:
 
 - `backdrop-color`
 - `border-color`
 - `background-color`
+- `icon-color`
 - `button-color`
-- `color`
+- `title-color`
+- `text-color`
 
 @demo demo/index.html
 -->
 
 <dom-module id="nebula-alert">
   <template>
-    <style>
+    <style include="nebula-dialog-styles">
       :host {
-        --nebula-alert-backdrop-color: hsla(0, 0%, 0%, 0.6);
-        --nebula-alert-background-color: hsl(0, 0%, 15%);
+        --nebula-alert-background-color: black;
         --nebula-alert-border-color: transparent;
+        --nebula-alert-title-color: white;
+        --nebula-alert-text-color: white;
+        --nebula-alert-icon-color: white;
         --nebula-alert-button-color: grey;
-        --nebula-alert-color: white;
-        --nebula-alert-z-index: 9999;
-        --nebula-alert-transition-duration: 0.4s;
-        position: fixed;
-        font-family: sans-serif;
-        font-size: 1rem;
-        z-index: var(--nebula-alert-z-index);
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: var(--nebula-alert-backdrop-color);
-        color: var(--nebula-alert-color);
-        margin: 0;
-        padding: 0;
-        border: 0;
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity var(--nebula-alert-transition-duration) linear, visibility 0s linear var(--nebula-alert-transition-duration);
-        @apply --layout-vertical;
-        @apply --layout-center-center;
         @apply --nebula-alert;
       }
-      :host([opened]) {
-        visibility: visible;
-        opacity: 1;
-        transition: opacity var(--nebula-alert-transition-duration) linear;
-      }
-      #container {
-        width: fit-content;
-        min-width: 288px;
-        max-width: 400px;
+      .dialog {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 1rem;
+        width: 80%;
+        height: auto;
+        min-height: fit-content;
+        overflow: hidden;
+        max-width: 320px;
         cursor: default;
-        align-items: stretch;
-        margin: 16px;
+        margin: 64px 0;
         padding: 16px;
-        outline: none;
         background-color: var(--nebula-alert-background-color);
-        border: 1px solid transparent;
-        @apply --layout-vertical;
-        @apply --layout-center-center;
-        @apply --nebula-alert-container;
-      }
-      #container > #title,
-      #container > #icon,
-      #container > #text {
-        margin: 4px 0;
-        text-align: center;
-      }
-      #title {
-        font-size: 1.2rem;
-        @apply --nebula-alert-title;
+        border: 1px solid var(--nebula-alert-border-color);
+        @apply --nebula-alert-dialog;
       }
       #icon {
+        color: var(--nebula-alert-icon-color);
+        left: 50%;
+        transform: translateX(-50%);
         height: 32px;
         width: 32px;
         @apply --nebula-alert-icon;
       }
+      #title {
+        color: var(--nebula-alert-title-color);
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        @apply --nebula-alert-title;
+      }
       #text {
+        margin: 16px 0;
+        color: var(--nebula-alert-text-color);
+        text-align: center;
         @apply --nebula-alert-text;
       }
-      #buttons {
-        width: 100%;
-        margin: 16px 0 0 0;
-        text-align: center;
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
-      }
-      nebula-button {
-        margin: 4px 0;
+      .button {
         --nebula-button-color: var(--nebula-alert-button-color);
+        display: block;
+        margin-top: 8px;
         @apply --nebula-alert-button;
       }
     </style>
-    <div id="container" on-tap="_onContainerTap" tabindex="-1">
-      <template is="dom-if" if="[[icon]]">
-        <div>
+    <nebula-appbar-layout class="dialog">
+      <div id="header" slot="header">
+        <template is="dom-if" if="[[icon]]">
           <iron-icon id="icon" icon="[[icon]]"></iron-icon>
-        </div>
-      </template>
-      <template is="dom-if" if="[[title]]">
-        <div id="title">[[title]]</div>
-      </template>
-      <template is="dom-if" if="[[text]]">
-        <div id="text">[[text]]</div>
-      </template>
-      <template is="dom-if" if="[[buttons]]">
-        <div id="buttons">
-          <template is="dom-repeat" items="[[buttons]]">
-            <nebula-button
-              data-index$="[[index]]"
-              on-tap="_onButtonTap">
-              {{item}}    
-            </nebula-button>
-          </template>
-        </div>
-      </template>
-    </div>
+        </template>
+        <template is="dom-if" if="[[title]]">
+          <div id="title">[[title]]</div>
+        </template>
+      </div>
+      <div id="content" slot="content">
+        <template is="dom-if" if="[[text]]">
+          <div id="text">[[text]]</div>
+        </template>
+      </div>
+      <div id="footer" slot="footer">
+        <template is="dom-repeat" items="[[buttons]]">
+          <nebula-button
+            class="button"
+            data-index$="[[index]]"
+            on-tap="_onButtonTap">
+            {{item}}    
+          </nebula-button>
+        </template>
+      </div>
+    </nebula-appbar-layout>
   </template >
   <script>
     Polymer({
-      /**
-       * Event triggered when element opening animation is complete.
-       * @event opened
-       */
-      /**
-       * Event triggered when element closing animation is complete.
-       * @event closed
-       */ 
       is: 'nebula-alert',
       behaviors: [
-        Nebula.StyleAttributesBehavior
+        Nebula.StyleAttributesBehavior,
+        Nebula.DialogBehavior
       ],      
       hostAttributes: {
-        'role': 'alertdialog'
+        'role': 'alertdialog',
+        'aria-labelledby': 'title',
+        'aria-describedby': 'text'
+      },
+      /**
+      * Map of style attributes that can be used to update CSS variables.
+      */
+      _styleAttributes: {
+        'backdrop-color': '--nebula-dialog-backdrop-color',
+        'title-color': '--nebula-alert-title-color',
+        'text-color': '--nebula-alert-text-color',
+        'background-color': '--nebula-alert-background-color',
+        'border-color': '--nebula-alert-border-color',
+        'button-color': '--nebula-alert-button-color',
+        'icon-color': '--nebula-alert-icon-color'    
       },
       properties: {
-        /**
-        * True if the element is opened, otherwise false.
-        */
-        opened: {
-          type: Boolean,
-          reflectToAttribute: true,
-          notify: true,
-          value: false
-        },
         /**
         * The title to display.
         */
@@ -246,181 +208,21 @@ The following styles can also be set as attributes on the element:
         * An array of buttons to generate.
         */
         buttons: {
-          type: Array
-        },
-        /**
-        * The index value of the button tapped to close the element.
-        */
-        value: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
-        /**
-        * Map of style attributes that can be used to update CSS variables.
-        */
-        styleAttributes: {
-          type: Object,
-          readOnly: true,
+          type: Array,
           value: function() {
-            return {
-              'color': '--nebula-alert-color',
-              'background-color': '--nebula-alert-background-color',
-              'border-color': '--nebula-alert-border-color',
-              'backdrop-color': '--nebula-alert-backdrop-color',
-              'button-color': '--nebula-alert-button-color'
-            }
+            return ['OK']
           }
         }
-      },
-      observers: [
-        '_onOpenedChanged(opened)',
-        '_onTitleChanged(title)',
-        '_onTextChanged(text)'
-      ],
-      listeners: {
-        'transitionend': '_onTransitionEnd',
-        'tap': '_onTap'
-      },
-      /**
-      * Lifecycle event handler triggered when the element has been initialized.
-      */
-      ready: function() {
-        Polymer.IronA11yAnnouncer.requestAvailability();
-      },
-      /**
-      * Lifecycle handler triggered when a key is pressed down.
-      * The handler is added and removed automatically when a element is opened and closed.
-      */ 
-      _onKey: function(e) {
-        var key = e.keyCode || e.which
-        if (key === 27) {
-          this.cancel()
-          return false
-        }
-      },
-      /**
-      * Event handler triggered when the user taps the element.
-      * The element is automatically closed.
-      */
-      _onTap: function(e) {
-        this.cancel()
-        return false
-      },
-      /**
-      * Event handler when content container is tapped.
-      * It discards the event.
-      */
-      _onContainerTap: function(e) {
-        return false
       },
       /**
       * Event handler when a content button is tapped.
       * It sets the value property, and closes the element.
       */
       _onButtonTap: function(e) {
-        this._setValue(e.target.dataset.index)
+        e.preventDefault()
+        e.stopPropagation()
+        this.set('result', e.target.dataset.index)
         this.set('opened', false)
-        return false
-      },
-      /**
-      * Event handler triggered when opening and closing animation is complete.
-      */
-      _onTransitionEnd: function(e) {
-        if (e.propertyName === 'opacity') {
-          if (this.opened) {
-            if (this.title) {
-              this.fire('iron-announce', {text: this.title}, {bubbles: true })
-            }
-            if (this.text) {
-              this.fire('iron-announce', {text: this.text}, {bubbles: true })
-            }
-            this.fire('opened', null, {bubbles: false})
-            this.$.container.focus()
-          }
-          else {
-            this.fire('closed', null, {bubbles: false})
-          }
-        }
-      },
-      /**
-      * Property observer triggered when the value of `opened` is changed.
-      */
-      _onOpenedChanged: function(opened) {
-        if (opened) {
-          document.addEventListener('keydown', this._onKey.bind(this))
-        } else {
-          document.removeEventListener('keydown', this._onKey)
-        }
-      },
-      /**
-      * Progress observer triggered when the title is changed.
-      * The change is announced for screen readers to support **a11y**.
-      */
-      _onTitleChanged: function(title) {
-        if (title) {
-          this.setAttribute('aria-labelledby', 'title')
-          if (this.opened) {
-            this.fire('iron-announce', {text: this.title}, {bubbles: true})  
-          }
-        } else {
-          this.removeAttribute('aria-labelledby')
-        }
-      },
-      /**
-      * Progress observer triggered when the text is changed.
-      * The change is announced for screen readers to support **a11y**.
-      */
-      _onTextChanged: function(text) {
-        if (text) {
-          this.setAttribute('aria-describedby', 'text')
-          if (this.opened) {
-            this.fire('iron-announce', {text: this.text}, {bubbles: true})
-          }
-        } else {
-          this.removeAttribute('aria-describedby')
-        }
-      },
-      /**
-      * Hides the element.
-      */
-      cancel: function() {
-        if (this.opened) {
-          this._setValue(undefined)
-          this.set('opened', false)
-        }
-      },
-      /**
-      * Displays the element.
-      * A promise is returned that will resolve when the element has been closed.
-      */
-      show: function() {
-        return new Promise(function(resolve) {
-          // add element to document body if not parent
-          if (!this.parentNode) {
-            this._appended = true
-            document.body.appendChild(this)
-          }
-
-          // listen for our own closed event and resolve promise
-          var handler = function() {
-            this.removeEventListener('closed', handler)
-
-            if (this._appended) {
-              this._appended = false
-              document.body.removeChild(this)
-            }
-
-            resolve(this.value) 
-          }
-          this.addEventListener('closed', handler.bind(this))
-
-          // open the element in a timeout closure to accomodate for animation
-          // when appending new element
-          setTimeout(function() {
-            this.set('opened', true)
-          }.bind(this))
-        }.bind(this))
       }
     })
   </script>
