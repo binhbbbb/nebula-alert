@@ -11,23 +11,27 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../iron-icons/iron-icons.html">
     <link rel="import" href="../nebula-alert.html">
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
   </head>
   <body>
 
     <div class="vertical-section-container">
       <h3>Basic Alert</h3>
       <demo-snippet>
-        <template is="dom-bind" id="demo1">
-          <nebula-alert
-            id="basic-alert"
-            title="Network Status"
-            text="You have gone offline."
-            buttons='["OK"]'>
-          </nebula-alert>
-          <button on-tap="show">Show Alert</button>
-        </template>
+        <dom-bind>
+          <template is="dom-bind" id="demo1">
+            <nebula-alert
+              id="basic-alert"
+              title="Network Status"
+              text="You have gone offline."
+              buttons='["OK"]'>
+            </nebula-alert>
+            <button on-tap="show">Show Alert</button>
+          </template>
+        </dom-bind>
         <script>
           demo1.show = function(e) {
             var el = document.getElementById('basic-alert')
@@ -42,16 +46,18 @@
     <div class="vertical-section-container">
       <h3>Confirmation Alert</h3>
       <demo-snippet>
-        <template is="dom-bind" id="demo2">
-          <nebula-alert
-            id="alert2"
-            title-color="yellow"
-            title="Warning"
-            text="Are you sure you want to delete?"
-            buttons='["Yes", "No"]'>
-          </nebula-alert>
-          <button on-tap="show">Show Confirmation</button>
-        </template>
+        <dom-bind>
+          <template is="dom-bind" id="demo2">
+            <nebula-alert
+              id="alert2"
+              title-color="yellow"
+              title="Warning"
+              text="Are you sure you want to delete?"
+              buttons='["Yes", "No"]'>
+            </nebula-alert>
+            <button on-tap="show">Show Confirmation</button>
+          </template>
+        </dom-bind>
         <script>
           demo2.show = function(e) {
             var el = document.getElementById('alert2')
@@ -66,18 +72,20 @@
     <div class="vertical-section-container">
       <h3>Warning (Icon)</h3>
       <demo-snippet>
-        <template is="dom-bind" id="demo3">
-          <nebula-alert
-            id="alert3"
-            icon-color="orange"
-            icon="icons:warning"
-            title-color="orange"
-            title="Warning"
-            text="You have been warned!"
-            buttons='["OK", "Cancel"]'>
-          </nebula-alert>
-          <button on-tap="show">Show Alert</button>
-        </template>
+        <dom-bind>
+          <template is="dom-bind" id="demo3">
+            <nebula-alert
+              id="alert3"
+              icon-color="orange"
+              icon="icons:warning"
+              title-color="orange"
+              title="Warning"
+              text="You have been warned!"
+              buttons='["OK", "Cancel"]'>
+            </nebula-alert>
+            <button on-tap="show">Show Alert</button>
+          </template>
+        </dom-bind>
         <script>
           demo3.show = function(e) {
             var el = document.getElementById('alert3')

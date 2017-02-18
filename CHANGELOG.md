@@ -1,10 +1,16 @@
 # Change Log
 
+## [v1.1.1](https://github.com/arsnebula/nebula-alert/releases/tag/v1.1.1) (2017-02-17)
+
+- Changed demo and test to support Polymer v2 upgrade.
+- Republish to fix broken demo.
+
 ## [v1.1.0](https://github.com/arsnebula/nebula-alert/releases/tag/v1.1.0) (2017-02-14)
 
 - Refactored to use nebula-dialog behavior and styles/
 - Refactored style attributes to allow every property to be themed.
 - Refactored to use nebula-appbar-layout
+- Removed dependency on iron-flex-layout and iron-announcer
 
 ## [v1.0.1](https://github.com/arsnebula/nebula-alert/releases/tag/v1.0.1) (2017-02-01)
 
