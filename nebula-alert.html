@@ -6,7 +6,6 @@ This code may be used under the terms found in LICENSE.md of this repository.
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../nebula-style-attributes-behavior/nebula-style-attributes-behavior.html">
 <link rel="import" href="../nebula-dialog/nebula-dialog.html">
 <link rel="import" href="../nebula-appbar-layout/nebula-appbar-layout.html">
 <link rel="import" href="../nebula-button/nebula-button.html">
@@ -39,6 +38,13 @@ var alert = Polymer.Base.create('nebula-alert', {
   buttons: ['OK']
 })
 
+// update any styles
+alert.updateStyles({
+  '--nebula-alert-dialog-color': 'white',
+  '--nebula-alert-dialog-background-color': 'black',
+  '--nebula-alert-dialog-border-color': 'silver',
+})
+
 // show the element - automatically appended to document.body
 alert.show().then(function(result) {
   console.log('The alert has been closed', result)
@@ -49,32 +55,29 @@ The `result` property wil return the index of the button clicked to close the di
 
 ## Style
 
-The preferred approach to styling the element is using CSS custom properties and mixins.
+The most common way to style the alert element is to set color properties for the various sub-elements. To make this easy, a collection of CSS variables are provided to easily theme the element.
 
 Custom property | Description | Default
 :--- | :--- | :---
-`--nebula-alert-background-color` | The color of the dialog background. | black
-`--nebula-alert-border-color` | The color of the dialog border. | transparent
-`--nebula-alert-button-color` | The color of the buttons. | grey
-`--nebula-alert-icon-color` | The color of the icon. | | white
-`--nebula-alert-title-color` | The color of the title. | | white
-`--nebula-alert-text-color` | The color of the text. | | white
-`--nebula-alert` | Mixin applied to the host element.
-`--nebula-alert-dialog` | Mixin applied to the dialog container.
+`--nebula-alert-backdrop-color` | The background color of the host element. | transparent
+`--nebula-alert-dialog-background-color` | The color of the dialog background. | transparent
+`--nebula-alert-dialog-border-color` | The color of the dialog border. | transparent
+`--nebula-alert-dialog-color` | The base color for all dialog sub-elements. | white
+`--nebula-alert-title-color` | The color of the title. | currentColor
+`--nebula-alert-text-color` | The color of the text. | | currentColor
+`--nebula-alert-icon-color` | The color of the icon. | | currentColor
+`--nebula-alert-button-color` | The color of the buttons. | currentColor
+
+For more granular control, the following mixins can be used to fully control the styling of each sub-element.
+
+Custom property | Description
+:--- | :---
+`--nebula-alert` | Mixin applied to the alert base element.
+`--nebula-alert-dialog` | Mixin applied to the alert dialog container.
 `--nebula-alert-title` | Mixin applied to the title element.
 `--nebula-alert-text` | Mixin applied to the text element.
 `--nebula-alert-icon` | Mixin applied to the icon element.
-`--nebula-alert-button` | Mixin applied to the button elements.
-
-For convenience, you can also apply a theme to the element using the following style attributes:
-
-- `backdrop-color`
-- `border-color`
-- `background-color`
-- `icon-color`
-- `button-color`
-- `title-color`
-- `text-color`
+`--nebula-alert-button` | Mixin applied to alert button elements.
 
 @demo demo/index.html
 -->
@@ -83,18 +86,11 @@ For convenience, you can also apply a theme to the element using the following s
   <template>
     <style include="nebula-dialog-styles">
       :host {
-        --nebula-alert-background-color: black;
-        --nebula-alert-border-color: transparent;
-        --nebula-alert-title-color: white;
-        --nebula-alert-text-color: white;
-        --nebula-alert-icon-color: white;
-        --nebula-alert-button-color: grey;
+        --nebula-dialog-backdrop-color: var(--nebula-alert-backdrop-color, var(--nebula-ui-backdrop-color, hsla(0, 0%, 0%, 0.6)));
         @apply --nebula-alert;
       }
-      .dialog {
+      #dialog {
         position: relative;
-        font-family: sans-serif;
-        font-size: 1rem;
         width: 80%;
         height: auto;
         min-height: fit-content;
@@ -103,12 +99,13 @@ For convenience, you can also apply a theme to the element using the following s
         cursor: default;
         margin: 64px 0;
         padding: 16px;
-        background-color: var(--nebula-alert-background-color);
-        border: 1px solid var(--nebula-alert-border-color);
+        background-color: var(--nebula-alert-dialog-background-color, transparent);
+        border: 1px solid var(--nebula-alert-dialog-border-color, transparent);
+        color: var(--nebula-alert-dialog-color, white);
         @apply --nebula-alert-dialog;
       }
       #icon {
-        color: var(--nebula-alert-icon-color);
+        color: var(--nebula-alert-icon-color, currentColor);
         left: 50%;
         transform: translateX(-50%);
         height: 32px;
@@ -116,7 +113,7 @@ For convenience, you can also apply a theme to the element using the following s
         @apply --nebula-alert-icon;
       }
       #title {
-        color: var(--nebula-alert-title-color);
+        color: var(--nebula-alert-title-color, currentColor);
         text-align: center;
         font-size: 1.2rem;
         font-weight: bold;
@@ -124,18 +121,18 @@ For convenience, you can also apply a theme to the element using the following s
       }
       #text {
         margin: 16px 0;
-        color: var(--nebula-alert-text-color);
+        color: var(--nebula-alert-text-color, currentColor);
         text-align: center;
         @apply --nebula-alert-text;
       }
       .button {
-        --nebula-button-color: var(--nebula-alert-button-color);
+        --nebula-button-color: var(--nebula-alert-button-color, currentColor);
         display: block;
         margin-top: 8px;
         @apply --nebula-alert-button;
       }
     </style>
-    <nebula-appbar-layout class="dialog">
+    <nebula-appbar-layout id="dialog">
       <div id="header" slot="header">
         <template is="dom-if" if="[[icon]]">
           <iron-icon id="icon" icon="[[icon]]"></iron-icon>
@@ -165,25 +162,12 @@ For convenience, you can also apply a theme to the element using the following s
     Polymer({
       is: 'nebula-alert',
       behaviors: [
-        Nebula.StyleAttributesBehavior,
         Nebula.DialogBehavior
       ],      
       hostAttributes: {
         'role': 'alertdialog',
         'aria-labelledby': 'title',
         'aria-describedby': 'text'
-      },
-      /**
-      * Map of style attributes that can be used to update CSS variables.
-      */
-      _styleAttributes: {
-        'backdrop-color': '--nebula-dialog-backdrop-color',
-        'title-color': '--nebula-alert-title-color',
-        'text-color': '--nebula-alert-text-color',
-        'background-color': '--nebula-alert-background-color',
-        'border-color': '--nebula-alert-border-color',
-        'button-color': '--nebula-alert-button-color',
-        'icon-color': '--nebula-alert-icon-color'    
       },
       properties: {
         /**

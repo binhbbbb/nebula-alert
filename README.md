@@ -1,18 +1,19 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/arsnebula/nebula-alert)
+[![Gitter chat](https://badges.gitter.im/org.png)](https://gitter.im/arsnebula/webcomponents)
 
-[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/f816dbafc9e2415baed45032acc091dd)
+[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/1ac6d7661c754f6f9abd8f40512aa53f)
 
 # \<nebula-alert\>
 
 A web component to display an alert dialog.
 
 * Responsive design adapts to screen size
-* Covers the entire screen with a backdrop and centered container
+* A full-screen overlay with backdrop and centered dialog
 * Supports optional title, icon, text and buttons
-* Supports `a11y` for accessability
 * Easily styled with style attributes or with CSS variables and mixins
+* Supports [WAI-ARIA](https://www.w3.org/TR/wai-aria-practices-1.1/#alert) for **a11y**
 
-> Warning: This element utilizes features of [ECMAScript 2015](http://www.ecma-international.org/ecma-262/6.0/) which may not be supported by all browsers. To ensure support by all browsers, consider using the [Core-js Polyfill](https://github.com/zloirock/core-js).
+> Warning: This element requires browser support for [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). To ensure support by all browsers, use a promise polyfill such as [PolymerLabs Promise Polyfill](https://github.com/PolymerLabs/promise-polyfill).
 
 ## Installation
 
@@ -47,9 +48,16 @@ You can also easily create and display the element programatically using the `sh
 // create the element
 var alert = Polymer.Base.create('nebula-alert', {
   title: 'Alert',
-  icon: 'warning',
+  icon: 'icons:warning',
   text: 'You have been warned',
   buttons: ['OK']
+})
+
+// update any styles
+alert.updateStyles({
+  '--nebula-alert-dialog-color': 'white',
+  '--nebula-alert-dialog-background-color': 'black',
+  '--nebula-alert-dialog-border-color': 'silver',
 })
 
 // show the element - automatically appended to document.body

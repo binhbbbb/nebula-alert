@@ -1,22 +1,11 @@
 {
   "name": "nebula-alert",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A web component to display an alert dialog.",
   "license": "ISC",
   "author": "Chris Beckett <chrisb@arsnebula.com>",
   "homepage": "https://github.com/arsnebula/nebula-alert",
-  "bugs": {
-    "url": "https://github.com/arsnebula/nebula-alert/issues",
-    "email": "support@arsnebula.com"
-  },
   "repository": "arsnebula/nebula-alert",
-  "keywords": [
-    "polymer",
-    "web-components",
-    "alert",
-    "overlay",
-    "dialog"
-  ],
   "scripts": {
     "test": "wct --plugin=local",
     "test:debug": "wct --plugin=local --persistent=true",

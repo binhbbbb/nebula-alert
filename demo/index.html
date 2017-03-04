@@ -5,14 +5,32 @@
     <title>nebula-alert</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script src="../../core.js/client/shim.min.js"></script>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../iron-icons/iron-icons.html">
     <link rel="import" href="../nebula-alert.html">
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
+        .basic-theme {
+          --nebula-alert-dialog-background-color: black;
+          --nebula-alert-dialog-border-color: silver;
+          --nebula-alert-button-color: LimeGreen;
+        }
+        .confirmation-theme {
+          --nebula-alert-dialog-background-color: black;
+          --nebula-alert-dialog-border-color: grey;
+          --nebula-alert-dialog-color: Gold;
+          --nebula-alert-button-color: silver;
+        }
+        .warning-theme {
+          --nebula-alert-dialog-background-color: black;
+          --nebula-alert-dialog-border-color: darkorange;
+          --nebula-alert-title-color: darkorange;
+          --nebula-alert-icon-color: darkorange;
+          --nebula-alert-button-color: red;
+        }
       </style>
     </custom-style>
   </head>
@@ -25,6 +43,7 @@
           <template is="dom-bind" id="demo1">
             <nebula-alert
               id="basic-alert"
+              class="basic-theme"
               title="Network Status"
               text="You have gone offline."
               buttons='["OK"]'>
@@ -50,7 +69,7 @@
           <template is="dom-bind" id="demo2">
             <nebula-alert
               id="alert2"
-              title-color="yellow"
+              class="confirmation-theme"
               title="Warning"
               text="Are you sure you want to delete?"
               buttons='["Yes", "No"]'>
@@ -76,9 +95,8 @@
           <template is="dom-bind" id="demo3">
             <nebula-alert
               id="alert3"
-              icon-color="orange"
+              class="warning-theme"
               icon="icons:warning"
-              title-color="orange"
               title="Warning"
               text="You have been warned!"
               buttons='["OK", "Cancel"]'>
