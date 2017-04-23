@@ -1,35 +1,32 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/arsnebula/nebula-alert)
-[![Gitter chat](https://badges.gitter.im/org.png)](https://gitter.im/arsnebula/webcomponents)
-
-[![Build Status](https://saucelabs.com/browser-matrix/arsnebula.svg)](https://saucelabs.com/beta/builds/1ac6d7661c754f6f9abd8f40512aa53f)
+[![Polymer Version](https://img.shields.io/badge/polymer-v2-blue.svg)](https://www.polymer-project.org)
+[![Sauce Labs Build Status](https://img.shields.io/badge/saucelabs-passing-red.svg)](https://saucelabs.com/beta/builds/42deb12e98be4506a3991b5aa20e251b)
+[![Gitter Chat](https://badges.gitter.im/org.png)](https://gitter.im/arsnebula/webcomponents)
+[![Become a Patreon](https://img.shields.io/badge/patreon-support_us-orange.svg)](https://www.patreon.com/arsnebula)
 
 # \<nebula-alert\>
 
-A web component to display an alert dialog.
+A customizable alert dialog.
 
-* Responsive design adapts to screen size
 * A full-screen overlay with backdrop and centered dialog
 * Supports optional title, icon, text and buttons
-* Easily styled with style attributes or with CSS variables and mixins
 * Supports [WAI-ARIA](https://www.w3.org/TR/wai-aria-practices-1.1/#alert) for **a11y**
-
-> Warning: This element requires browser support for [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). To ensure support by all browsers, use a promise polyfill such as [PolymerLabs Promise Polyfill](https://github.com/PolymerLabs/promise-polyfill).
 
 ## Installation
 
 ```sh
-$ bower install arsnebula/nebula-alert
+$ bower install -S arsnebula/nebula-alert
 ```
 
-## Usage
+## Getting Started
 
-Import the package element:
+Import the package.
 
 ```html
 <link rel="import" href="/bower_components/nebula-loader/nebula-alert.html"> 
 ```
 
-Add and configure the element declaratively:
+Add the element.
 
 ```html
 <nebula-alert
@@ -46,12 +43,7 @@ You can also easily create and display the element programatically using the `sh
 
 ```js
 // create the element
-var alert = Polymer.Base.create('nebula-alert', {
-  title: 'Alert',
-  icon: 'icons:warning',
-  text: 'You have been warned',
-  buttons: ['OK']
-})
+const alert = document.createElement('nebula-alert')
 
 // update any styles
 alert.updateStyles({
@@ -61,14 +53,29 @@ alert.updateStyles({
 })
 
 // show the element - automatically appended to document.body
-alert.show().then(function(result) {
+alert.show({
+  title: 'Alert',
+  icon: 'icons:warning',
+  text: 'You have been warned',
+  buttons: ['OK']
+}).then(function(result) {
   console.log('The alert has been closed', result)
 })
 ```
 
-*For more information on element properties and methods see the element API documentation.*
+*For more information, see the API documentation.*
 
 ## Contributing
+
+We welcome and appreciate feedback from the community. Here are a few ways that you can show your appreciation for this package:
+
+* Give us a **Star on GitHub** from either [webcomponents.org](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin) or directly on [GitHub](https://github.com/arsnebula/nebula-element-mixin).
+
+* Submit a feature request, or a defect report on the [Issues List](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin/issues).
+
+* Become a [Patreon](https://www.patreon.com/arsnebula). It takes a lot of time and effort to develop, document, test and support the elements in our [Nebula Essentials](https://www.webcomponents.org/collection/arsnebula/nebula-essentials) collection. Your financial contribution will help ensure that our entire collection continues to grow and improve.
+
+If you are a developer, and are interested in making a code contribution, consider opening an issue first to describe the change, and discuss with the core repository maintainers. Once you are ready, prepare a pull request:
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`

@@ -1,20 +1,20 @@
 {
   "name": "nebula-alert",
-  "version": "1.2.0",
-  "description": "A web component to display an alert dialog.",
+  "version": "2.0.0",
+  "description": "A customizable alert dialog.",
   "license": "ISC",
+  "private": true,
   "author": "Chris Beckett <chrisb@arsnebula.com>",
   "homepage": "https://github.com/arsnebula/nebula-alert",
   "repository": "arsnebula/nebula-alert",
   "scripts": {
     "test": "wct --plugin=local",
     "test:debug": "wct --plugin=local --persistent=true",
-    "test:sauce": "wct --plugin=sauce --sauce-username=arsnebula",
+    "test:sauce": "wct --plugin=sauce",
     "start": "browser-sync start -c bsconfig.js"
   },
   "devDependencies": {
-    "browser-sync": "^2.18.6",
-    "minimist": "^1.2.0",
-    "web-component-tester": "^5.0.0"
+    "browser-sync": "latest",
+    "web-component-tester": "^6.0.0 || 6.0.0-prerelease.5"
   }
 }

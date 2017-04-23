@@ -1,18 +1,28 @@
 <!doctype html>
-
 <html>
   <head>
     <title>nebula-alert</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../iron-icons/iron-icons.html">
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+    <link rel="import" href="../../nebula-icons/nebula-icons.html">
     <link rel="import" href="../nebula-alert.html">
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
+      <style>
+        body {
+          font-family: sans-serif;
+          font-size: 14px;
+          margin: 0;
+          padding: 16px;
+          background-color:white;          
+        }
+        demo-snippet {
+          display: block;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          padding: 8px 16px;
+          margin-bottom: 40px;
+        }
         .basic-theme {
           --nebula-alert-dialog-background-color: black;
           --nebula-alert-dialog-border-color: silver;
@@ -36,84 +46,66 @@
   </head>
   <body>
 
-    <div class="vertical-section-container">
-      <h3>Basic Alert</h3>
-      <demo-snippet>
-        <dom-bind>
-          <template is="dom-bind" id="demo1">
-            <nebula-alert
-              id="basic-alert"
-              class="basic-theme"
-              title="Network Status"
-              text="You have gone offline."
-              buttons='["OK"]'>
-            </nebula-alert>
-            <button on-tap="show">Show Alert</button>
-          </template>
-        </dom-bind>
-        <script>
-          demo1.show = function(e) {
-            var el = document.getElementById('basic-alert')
-            el.show().then(function(value) {
-              console.log('The alert has been closed', value)
-            })
-          }
-        </script>
-      </demo-snippet>
-    </div>
+    <nebula-iconset name="demo" size="24">
+      <svg>
+        <defs>
+          <g id="warning"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g>
+        </defs>
+      </svg>
+    </nebula-iconset>
 
-    <div class="vertical-section-container">
-      <h3>Confirmation Alert</h3>
-      <demo-snippet>
-        <dom-bind>
-          <template is="dom-bind" id="demo2">
-            <nebula-alert
-              id="alert2"
-              class="confirmation-theme"
-              title="Warning"
-              text="Are you sure you want to delete?"
-              buttons='["Yes", "No"]'>
-            </nebula-alert>
-            <button on-tap="show">Show Confirmation</button>
-          </template>
-        </dom-bind>
-        <script>
-          demo2.show = function(e) {
-            var el = document.getElementById('alert2')
-            el.show().then(function(value) {
-              console.log('The alert has been closed', value)
-            })
-          }
-        </script>
-      </demo-snippet>
-    </div>
-
-    <div class="vertical-section-container">
-      <h3>Warning (Icon)</h3>
-      <demo-snippet>
-        <dom-bind>
-          <template is="dom-bind" id="demo3">
-            <nebula-alert
-              id="alert3"
-              class="warning-theme"
-              icon="icons:warning"
-              title="Warning"
-              text="You have been warned!"
-              buttons='["OK", "Cancel"]'>
-            </nebula-alert>
-            <button on-tap="show">Show Alert</button>
-          </template>
-        </dom-bind>
-        <script>
-          demo3.show = function(e) {
-            var el = document.getElementById('alert3')
-            el.show().then(function(value) {
-              console.log('The alert has been closed', value)
-            })
-          }
-        </script>
-      </demo-snippet>
-    </div>
+    <h3>Alerts</h3>
+    <demo-snippet>
+      <dom-bind id="demo">
+        <template>
+          <nebula-alert
+            id="basic-alert"
+            class="basic-theme"
+            title="Network Status"
+            text="You have gone offline."
+            buttons='["OK"]'>
+          </nebula-alert>
+          <nebula-alert
+            id="confirm-alert"
+            class="confirmation-theme"
+            title="Warning"
+            text="Are you sure you want to delete?"
+            buttons='["Yes", "No"]'>
+          </nebula-alert>
+          <nebula-alert
+            id="warning-alert"
+            class="warning-theme"
+            icon="demo:warning"
+            title="Warning"
+            text="You have been warned!"
+            buttons='["OK", "Cancel"]'>
+          </nebula-alert>
+          <button on-click="showBasic">Basic Alert</button>
+          <button on-click="showConfirm">Confirmation</button>
+          <button on-click="showWarning">Warning</button>
+        </template>
+      </dom-bind>
+    </demo-snippet>
+    <script>
+      demo.showBasic = function(e) {
+        var el = document.getElementById('basic-alert')
+        el.show().then(function(value) {
+          console.log('The alert has been closed', value)
+        })
+      }
+      demo.showConfirm = function(e) {
+        var el = document.getElementById('confirm-alert')
+        el.show().then(function(value) {
+          console.log('The alert has been closed', value)
+        })
+      }
+      demo.showWarning = function(e) {
+        var el = document.getElementById('warning-alert')
+        el.show().then(function(value) {
+          console.log('The alert has been closed', value)
+        })
+      }
+    </script>
 
   </body>
 </html>

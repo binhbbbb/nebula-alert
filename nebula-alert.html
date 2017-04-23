@@ -1,86 +1,10 @@
-<!--
-@license
-Copyright (c) 2017 Ars Nebula LLC.
-This code may be used under the terms found in LICENSE.md of this repository.
--->
-
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../shadycss/apply-shim.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../nebula-icons/nebula-icon.html">
 <link rel="import" href="../nebula-dialog/nebula-dialog.html">
-<link rel="import" href="../nebula-appbar-layout/nebula-appbar-layout.html">
 <link rel="import" href="../nebula-button/nebula-button.html">
-
-<!--
-`<nebula-alert>` is a web component to display an alert dialog.
-  
-## Usage
-
-The following demonstrates the element with some common properties and events.
-
-```html
-<nebula-alert
-  icon="icons:warning"
-  title="Alert"
-  text="You have been warned"
-  buttons='["OK"]'
-  value="{{alertValue}}>
-</nebula-alert>
-```
-
-You can also create and show the element programatically. The `show` method will ensure the element is appended and removed from the `document.body` automatically. The method returns a promise that is resolved once the element closing animation is complete.
-
-```js
-// create the element
-var alert = Polymer.Base.create('nebula-alert', {
-  title: 'Alert',
-  icon: 'warning',
-  text: 'You have been warned',
-  buttons: ['OK']
-})
-
-// update any styles
-alert.updateStyles({
-  '--nebula-alert-dialog-color': 'white',
-  '--nebula-alert-dialog-background-color': 'black',
-  '--nebula-alert-dialog-border-color': 'silver',
-})
-
-// show the element - automatically appended to document.body
-alert.show().then(function(result) {
-  console.log('The alert has been closed', result)
-})
-```
-
-The `result` property wil return the index of the button clicked to close the dialog, or `undefined` if the dialog was cancelled by pressing the `ESC` key or clicking the backdrop. To disable cancel, set the `allowCancel` property to `false`.
-
-## Style
-
-The most common way to style the alert element is to set color properties for the various sub-elements. To make this easy, a collection of CSS variables are provided to easily theme the element.
-
-Custom property | Description | Default
-:--- | :--- | :---
-`--nebula-alert-backdrop-color` | The background color of the host element. | transparent
-`--nebula-alert-dialog-background-color` | The color of the dialog background. | transparent
-`--nebula-alert-dialog-border-color` | The color of the dialog border. | transparent
-`--nebula-alert-dialog-color` | The base color for all dialog sub-elements. | white
-`--nebula-alert-title-color` | The color of the title. | currentColor
-`--nebula-alert-text-color` | The color of the text. | | currentColor
-`--nebula-alert-icon-color` | The color of the icon. | | currentColor
-`--nebula-alert-button-color` | The color of the buttons. | currentColor
-
-For more granular control, the following mixins can be used to fully control the styling of each sub-element.
-
-Custom property | Description
-:--- | :---
-`--nebula-alert` | Mixin applied to the alert base element.
-`--nebula-alert-dialog` | Mixin applied to the alert dialog container.
-`--nebula-alert-title` | Mixin applied to the title element.
-`--nebula-alert-text` | Mixin applied to the text element.
-`--nebula-alert-icon` | Mixin applied to the icon element.
-`--nebula-alert-button` | Mixin applied to alert button elements.
-
-@demo demo/index.html
--->
 
 <dom-module id="nebula-alert">
   <template>
@@ -90,15 +14,15 @@ Custom property | Description
         @apply --nebula-alert;
       }
       #dialog {
-        position: relative;
         width: 80%;
+        max-width: 320px;
         height: auto;
         min-height: fit-content;
-        overflow: hidden;
-        max-width: 320px;
         cursor: default;
+        align-items: stretch;
         margin: 64px 0;
         padding: 16px;
+        text-align: center;
         background-color: var(--nebula-alert-dialog-background-color, transparent);
         border: 1px solid var(--nebula-alert-dialog-border-color, transparent);
         color: var(--nebula-alert-dialog-color, white);
@@ -106,8 +30,6 @@ Custom property | Description
       }
       #icon {
         color: var(--nebula-alert-icon-color, currentColor);
-        left: 50%;
-        transform: translateX(-50%);
         height: 32px;
         width: 32px;
         @apply --nebula-alert-icon;
@@ -132,82 +54,95 @@ Custom property | Description
         @apply --nebula-alert-button;
       }
     </style>
-    <nebula-appbar-layout id="dialog">
-      <div id="header" slot="header">
-        <template is="dom-if" if="[[icon]]">
-          <iron-icon id="icon" icon="[[icon]]"></iron-icon>
+    <div id="dialog">
+      <dom-if if="[[icon]]">
+        <template>
+          <div id="icon-container">
+            <nebula-icon id="icon" icon="[[icon]]"></nebula-icon>
+          </div>
         </template>
-        <template is="dom-if" if="[[title]]">
+      </dom-if>
+      <dom-if if="[[title]]">
+        <template>
           <div id="title">[[title]]</div>
         </template>
-      </div>
-      <div id="content" slot="content">
-        <template is="dom-if" if="[[text]]">
+      </dom-if>
+      <dom-if if="[[text]]">
+        <template>
           <div id="text">[[text]]</div>
         </template>
-      </div>
-      <div id="footer" slot="footer">
-        <template is="dom-repeat" items="[[buttons]]">
+      </dom-if>
+      <dom-repeat items="[[buttons]]">
+        <template>
           <nebula-button
             class="button"
             data-index$="[[index]]"
-            on-tap="_onButtonTap">
+            on-click="__onButtonClick">
             {{item}}    
           </nebula-button>
         </template>
-      </div>
-    </nebula-appbar-layout>
+      </dom-repeat>
+    </div>
   </template >
   <script>
-    Polymer({
-      is: 'nebula-alert',
-      behaviors: [
-        Nebula.DialogBehavior
-      ],      
-      hostAttributes: {
-        'role': 'alertdialog',
-        'aria-labelledby': 'title',
-        'aria-describedby': 'text'
-      },
-      properties: {
-        /**
-        * The title to display.
-        */
-        title: {
-          type: String
-        },
-        /**
-        * The icon key to display as a spinner.
-        */
-        icon: {
-          type: String
-        },
-        /**
-        * The text message to display.
-        */
-        text: {
-          type: String
-        },
-        /**
-        * An array of buttons to generate.
-        */
-        buttons: {
-          type: Array,
-          value: function() {
-            return ['OK']
+  (function() {
+    'use strict'
+
+    /** A customizable alert dialog. */
+    class NebulaAlert extends Nebula.DialogBehavior(Polymer.Element) {
+
+      /** Gets the custom element name. */      
+      static get is() { return 'nebula-alert' }
+
+      /**
+       * Gets the property definitions for data binding.
+       * @type {Object}
+       * @property {string} title - The title to display.
+       * @property {string} icon - The key of the icon to display.
+       * @property {number} text - A progress message.
+       * @property {Array} buttons - An array of buttons to generate.
+       */
+      static get properties() {
+        return {
+          title: {
+            type: String
+          },
+          icon: {
+            type: String
+          },
+          text: {
+            type: String
+          },
+          buttons: {
+            type: Array,
+            value: function() {
+              return ['OK']
+            }
           }
         }
-      },
-      /**
-      * Event handler when a content button is tapped.
-      * It sets the value property, and closes the element.
-      */
-      _onButtonTap: function(e) {
+      }
+
+      /** Lifecycle callback invoked when element has been initialized. */
+      ready() {
+        super.ready()
+        this.setAttribute('role', 'alertdialog')
+        this.setAttribute('aria-labelledby', 'title')
+        this.setAttribute('aria-describedby', 'text')
+      }
+
+      /** Event handler when a content button is tapped. */
+      __onButtonClick(e) {
         e.preventDefault()
         e.stopPropagation()
-        this.set('result', e.target.dataset.index)
-        this.set('opened', false)
+        this.setProperties({
+          result: e.target.dataset.index,
+          opened: false
+        })
       }
-    })
+
+    }
+
+    customElements.define(NebulaAlert.is, NebulaAlert)
+  }())
   </script>
 </dom-module>
