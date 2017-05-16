@@ -24,19 +24,21 @@
           margin-bottom: 40px;
         }
         .basic-theme {
-          --nebula-alert-dialog-background-color: black;
-          --nebula-alert-dialog-border-color: silver;
-          --nebula-alert-button-color: LimeGreen;
+          --nebula-alert-background-color: black;
+          --nebula-alert-border-color: grey;
+          --nebula-alert-color: silver;
+          --nebula-alert-button-color: Green;
         }
         .confirmation-theme {
-          --nebula-alert-dialog-background-color: black;
-          --nebula-alert-dialog-border-color: grey;
-          --nebula-alert-dialog-color: Gold;
-          --nebula-alert-button-color: silver;
+          --nebula-alert-color: silver;
+          --nebula-alert-background-color: black;
+          --nebula-alert-border-color: grey;
+          --nebula-alert-button-color: Gold;
         }
         .warning-theme {
-          --nebula-alert-dialog-background-color: black;
-          --nebula-alert-dialog-border-color: darkorange;
+          --nebula-alert-color: silver;
+          --nebula-alert-background-color: black;
+          --nebula-alert-border-color: darkorange;
           --nebula-alert-title-color: darkorange;
           --nebula-alert-icon-color: darkorange;
           --nebula-alert-button-color: red;
@@ -68,7 +70,7 @@
           <nebula-alert
             id="confirm-alert"
             class="confirmation-theme"
-            title="Warning"
+            title="Confirmation"
             text="Are you sure you want to delete?"
             buttons='["Yes", "No"]'>
           </nebula-alert>

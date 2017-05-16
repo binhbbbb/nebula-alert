@@ -1,12 +1,18 @@
 # Change Log
 
+## [v2.1.0](https://github.com/arsnebula/nebula-alert/releases/tag/v2.1.0) (PENDING)
+
+- Added focus to default button when opened.
+- Removed CSS apply shim; added more CSS variables for theming.
+- Refactored CSS variable names (see documentation).
+
 ## [v2.0.0](https://github.com/arsnebula/nebula-alert/releases/tag/v2.0.0) (2017-04-22)
 
 - Upgraded to Polymer v2 ES2015 class-style element.
 
 ## [v1.2.0](https://github.com/arsnebula/nebula-alert/releases/tag/v1.2.0) (2017-03-04)
 
-- Removed style attributes behavior. **BREAKING**
+- Removed style attributes behavior.
 - Updated dependency versions.
 - Remove font and other styles to defer to client styling.
 
