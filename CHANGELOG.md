@@ -1,10 +1,11 @@
 # Change Log
 
-## [v2.1.0](https://github.com/arsnebula/nebula-alert/releases/tag/v2.1.0) (PENDING)
+## [v2.1.0](https://github.com/arsnebula/nebula-alert/releases/tag/v2.1.0) (2017-05-22)
 
 - Added focus to default button when opened.
 - Removed CSS apply shim; added more CSS variables for theming.
-- Refactored CSS variable names (see documentation).
+- Refactored CSS styles and adding extra variables (see documentation).
+- Removed manual documentation and updated inline comments for API documentation generation.
 
 ## [v2.0.0](https://github.com/arsnebula/nebula-alert/releases/tag/v2.0.0) (2017-04-22)
 

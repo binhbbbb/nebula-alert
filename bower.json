@@ -24,9 +24,6 @@
     "notification"
   ],
   "main": "nebula-alert.html",
-  "pages": {
-    "<nebula-alert>": "docs/nebula-alert.md"
-  },
   "demos": {
     "Demo": "demo/index.html"
   },

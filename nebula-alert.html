@@ -5,11 +5,77 @@
 <link rel="import" href="../nebula-dialog/nebula-dialog.html">
 <link rel="import" href="../nebula-button/nebula-button.html">
 
+<!--
+`<nebula-alert>` is a custom element to display an alert dialog.
+  
+## Usage
+
+The following demonstrates the element with some common properties and events.
+
+```html
+<nebula-alert
+  icon="icons:warning"
+  title="Alert"
+  text="You have been warned"
+  buttons='["OK"]'
+  value="{{alertValue}}>
+</nebula-alert>
+```
+
+You can also create and show the element programatically. The `show` method will ensure the element is appended and removed from the `document.body` automatically. The method returns a promise that is resolved once the element closing animation is complete.
+
+```js
+// create the element
+const alert = document.createElement('nebula-alert')
+
+// update any styles
+alert.updateStyles({
+  '--nebula-alert-color': 'white',
+  '--nebula-alert-background-color': 'black',
+  '--nebula-alert-border-color': 'silver',
+})
+
+// show the element - automatically appended to document.body
+alert.show({
+  title: 'Alert',
+  icon: 'icons:warning',
+  text: 'You have been warned',
+  buttons: ['OK']
+}).then(function(result) {
+  console.log('The alert has been closed', result)
+})
+```
+
+The `result` property wil return the index of the button clicked to close the dialog, or `undefined` if the dialog was cancelled by pressing the `ESC` key or clicking the backdrop. To disable cancel, set the `allowCancel` property to `false`.
+
+## Styling
+
+The element can be styled using standard CSS properties, and the following variables:
+
+Custom property | Description | Default
+:--- | :--- | :---
+`--nebula-alert-color` | The base color for all dialog sub-elements. | inherit
+`--nebula-alert-backdrop-color` | The background color of the host element. | transparent
+`--nebula-alert-background-color` | The color of the dialog background. | transparent
+`--nebula-alert-border-color` | The color of the dialog border. | transparent
+`--nebula-alert-icon-color` | The color of the icon. | inherit
+`--nebula-alert-icon-size` | The size of the icon. | 2rem
+`--nebula-alert-title-color` | The color of the title. | inherit
+`--nebula-alert-title-background-color` | The background color of the title area. | inherit
+`--nebula-alert-title-font` | The font of the title. | 1.2rem bold
+`--nebula-alert-text-color` | The color of the text. | inherit
+`--nebula-alert-text-background-color` | The background color of the text area. | | inherit
+`--nebula-alert-text-font` | The font of the text. | | inherit
+`--nebula-alert-buttons-color` | The color of the buttons. | inherit
+`--nebula-alert-buttons-background-color` | The background color of the buttons area. | inherit
+`--nebula-alert-buttons-font` | The font of the buttons. | inherit
+
+-->
 <dom-module id="nebula-alert">
   <template>
     <style include="nebula-dialog-styles">
       :host {
-        --nebula-dialog-backdrop-color: var(--nebula-alert-backdrop-color, var(--nebula-ui-backdrop-color, hsla(0, 0%, 0%, 0.6)));
+        background-color: var(--nebula-alert-backdrop-color, var(--nebula-ui-backdrop-color, hsla(0, 0%, 0%, 0.6)));
       }
       #content {
         width: 80%;
@@ -20,51 +86,56 @@
         -webkit-align-items: stretch;
         align-items: stretch;
         margin: 64px 0;
-        padding: 16px;
+        padding: 0;
         text-align: center;
         background-color: var(--nebula-alert-background-color, transparent);
         border: 1px solid var(--nebula-alert-border-color, transparent);
         color: var(--nebula-alert-color, white);
       }
-      #icon {
-        color: var(--nebula-alert-icon-color, inherit);
-        height: var(--nebula-alert-icon-size, 32px);
-        width: var(--nebula-alert-icon-size, 32px);
-      }
       #title {
         color: var(--nebula-alert-title-color, inherit);
+        background-color: var(--nebula-alert-title-background-color, inherit);
         font: var(--nebula-alert-title-font, 1.2rem bold);
         text-align: center;
+        padding: 16px;
+      }
+      #title #icon {
+        color: var(--nebula-alert-icon-color, inherit);
+        height: var(--nebula-alert-icon-size, 2rem);
+        width: var(--nebula-alert-icon-size, 2rem);
       }
       #text {
         color: var(--nebula-alert-text-color, inherit);
+        background-color: var(--nebula-alert-text-background-color, inherit);
         font: var(--nebula-alert-text-font, inherit);
         text-align: center;
-        margin: 16px 0;
+        padding: 16px;
       }
       #buttons {
-        color: var(--nebula-alert-button-color, inherit);
-        margin-top: 8px;
+        color: var(--nebula-alert-buttons-color, inherit);
+        background-color: var(--nebula-alert-buttons-background-color, inherit);
+        font: var(--nebula-alert-buttons-font, inherit);
+        padding: 16px;
       }
     </style>
     <div id="content">
-      <dom-if if="[[icon]]">
+      <dom-if if="[[$exists('title', 'icon')]]">
         <template>
-          <div id="icon-container">
-            <nebula-icon id="icon" icon="[[icon]]"></nebula-icon>
+          <div id="title">
+            <dom-if if="[[icon]]">
+              <template>
+                <nebula-icon id="icon" icon="[[icon]]"></nebula-icon>
+              </template>
+            </dom-if>  
+            <dom-if if="[[title]]">
+              <template>
+                <div>[[title]]</div>
+              </template>
+            </dom-if>
           </div>
         </template>
       </dom-if>
-      <dom-if if="[[title]]">
-        <template>
-          <div id="title">[[title]]</div>
-        </template>
-      </dom-if>
-      <dom-if if="[[text]]">
-        <template>
-          <div id="text">[[text]]</div>
-        </template>
-      </dom-if>
+      <div id="text">[[text]]</div>
       <div id="buttons">
         <dom-repeat items="[[buttons]]">
           <template>
@@ -83,38 +154,47 @@
   (function() {
     'use strict'
 
-    // symbols for private members
+    // symbols for private and protected members
     const onOpened = Symbol()
     const onClick = Symbol()
-
-    // symbols for protected members
     const listen = Symbol.for('Nebula.ElementMixin.listen')
 
-    /** A customizable alert dialog. */
     class NebulaAlert extends Nebula.DialogBehavior(Polymer.Element) {
 
-      /** Gets the custom element name. */      
+      /** Gets the custom element tag name.
+       * @protected
+       * @ignore
+       */      
       static get is() { return 'nebula-alert' }
 
       /**
        * Gets the property definitions for data binding.
-       * @type {Object}
-       * @property {string} title - The title to display.
-       * @property {string} icon - The key of the icon to display.
-       * @property {number} text - A progress message.
-       * @property {Array} buttons - An array of buttons to generate.
+       * @protected
+       * @ignore
        */
       static get properties() {
         return {
+          /**
+           * The title of the alert dialog.
+           */
           title: {
             type: String
           },
+          /**
+           * The key of an icon resource.
+           */
           icon: {
             type: String
           },
+          /**
+           * The text of the alert dialog.
+           */
           text: {
             type: String
           },
+          /**
+           * A collection of labels for button generation.
+           */
           buttons: {
             type: Array,
             value: function() {
@@ -124,7 +204,10 @@
         }
       }
 
-      /** Lifecycle callback invoked when element has been initialized. */
+      /**
+       * The Polymer lifecycle callback invoked when element has been initialized.
+       * @protected
+       */
       ready() {
         super.ready()
         this.setAttribute('role', 'alertdialog')
@@ -134,6 +217,23 @@
         this[listen](this, 'click', this[onClick])
       }
 
+      /**
+       * A computed binding to determine if a property value exists.
+       * @param {[string]} props - A collection of property names.
+       * @private
+       */
+      $exists(...props) {
+        for (const prop of props) {
+          if (this[prop] !== void(0)) return true
+        }
+        return false
+      }
+
+      /**
+       * An event handler triggered when the dialog is opened.
+       * @param {CustomEvent} e - Information about the event.
+       * @private
+       */
       [onOpened](e) {
         const btn = this.shadowRoot.querySelector('.button')
         if (btn) {
@@ -141,7 +241,11 @@
         }
       }
 
-      /** Event handler when a button is clicked. */
+      /**
+       * An event handler triggered when a dialog button is clicked.
+       * @param {MouseEvent} e - Information about the event.
+       * @private
+       */
       [onClick](e) {
         const src = e.composedPath()[0]
 
